@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://cpnwibs4m1tme"]
+
+[ext_resource type="Script" path="res://Main.cs" id="1_nmy2k"]
+[ext_resource type="PackedScene" uid="uid://8jinppjxt084" path="res://ball.tscn" id="1_qog2e"]
+[ext_resource type="PackedScene" uid="uid://d1kegwhopmuc" path="res://Player/Player.tscn" id="3_ujn6x"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_dhtx5"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_am4mp"]
+normal = Vector2(0, 1)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_2q41n"]
+normal = Vector2(-1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xuxsp"]
+normal = Vector2(1, 0)
+
+[node name="game" type="Node2D"]
+script = ExtResource("1_nmy2k")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0, 0, 0, 0.478431)
+
+[node name="Ball" parent="." instance=ExtResource("1_qog2e")]
+position = Vector2(320, 180)
+motion_mode = 0
+floor_block_on_wall = false
+floor_max_angle = 0.0
+
+[node name="borders" type="StaticBody2D" parent="."]
+
+[node name="bottom" type="CollisionShape2D" parent="borders"]
+position = Vector2(0, 359)
+shape = SubResource("WorldBoundaryShape2D_dhtx5")
+
+[node name="Top" type="CollisionShape2D" parent="borders"]
+shape = SubResource("WorldBoundaryShape2D_am4mp")
+
+[node name="Right" type="CollisionShape2D" parent="borders"]
+position = Vector2(640, 164)
+shape = SubResource("WorldBoundaryShape2D_2q41n")
+
+[node name="left" type="CollisionShape2D" parent="borders"]
+position = Vector2(0, 164)
+shape = SubResource("WorldBoundaryShape2D_xuxsp")
+
+[node name="Player" parent="." instance=ExtResource("3_ujn6x")]
+position = Vector2(20, 0)
+scale = Vector2(0.2, 3.36876)
+motion_mode = 1
+floor_stop_on_slope = false
