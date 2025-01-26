@@ -1,8 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://cpnwibs4m1tme"]
+[gd_scene load_steps=10 format=3 uid="uid://cpnwibs4m1tme"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_nmy2k"]
 [ext_resource type="PackedScene" uid="uid://8jinppjxt084" path="res://ball.tscn" id="1_qog2e"]
+[ext_resource type="Script" path="res://PointBorder.cs" id="3_4hho7"]
 [ext_resource type="PackedScene" uid="uid://d1kegwhopmuc" path="res://Player/Player.tscn" id="3_ujn6x"]
+[ext_resource type="FontFile" uid="uid://bp2crjph8u2yv" path="res://fonts/QuinqueFive.ttf" id="5_go4ix"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4rdyl"]
+normal = Vector2(1, 0)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_dhtx5"]
 
@@ -12,9 +17,6 @@ normal = Vector2(0, 1)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_2q41n"]
 normal = Vector2(-1, 0)
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xuxsp"]
-normal = Vector2(1, 0)
-
 [node name="game" type="Node2D"]
 script = ExtResource("1_nmy2k")
 
@@ -23,31 +25,86 @@ offset_right = 640.0
 offset_bottom = 360.0
 color = Color(0, 0, 0, 0.478431)
 
+[node name="middle" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 316.0
+offset_right = 324.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Ball" parent="." instance=ExtResource("1_qog2e")]
 position = Vector2(320, 180)
 motion_mode = 0
 floor_block_on_wall = false
 floor_max_angle = 0.0
 
-[node name="borders" type="StaticBody2D" parent="."]
+[node name="borders" type="Node" parent="."]
 
-[node name="bottom" type="CollisionShape2D" parent="borders"]
+[node name="left" type="StaticBody2D" parent="borders" groups=["leftBorder"]]
+position = Vector2(0, 180)
+script = ExtResource("3_4hho7")
+
+[node name="left" type="CollisionShape2D" parent="borders/left"]
+shape = SubResource("WorldBoundaryShape2D_4rdyl")
+
+[node name="bottom" type="StaticBody2D" parent="borders"]
+
+[node name="bottom" type="CollisionShape2D" parent="borders/bottom"]
 position = Vector2(0, 359)
 shape = SubResource("WorldBoundaryShape2D_dhtx5")
 
-[node name="Top" type="CollisionShape2D" parent="borders"]
+[node name="top" type="StaticBody2D" parent="borders"]
+
+[node name="top" type="CollisionShape2D" parent="borders/top"]
 shape = SubResource("WorldBoundaryShape2D_am4mp")
 
-[node name="Right" type="CollisionShape2D" parent="borders"]
+[node name="right" type="StaticBody2D" parent="borders" groups=["rightBorder"]]
+script = ExtResource("3_4hho7")
+
+[node name="Right" type="CollisionShape2D" parent="borders/right"]
 position = Vector2(640, 164)
 shape = SubResource("WorldBoundaryShape2D_2q41n")
 
-[node name="left" type="CollisionShape2D" parent="borders"]
-position = Vector2(0, 164)
-shape = SubResource("WorldBoundaryShape2D_xuxsp")
-
 [node name="Player" parent="." instance=ExtResource("3_ujn6x")]
-position = Vector2(20, 0)
-scale = Vector2(0.2, 3.36876)
+position = Vector2(20, 136)
+scale = Vector2(0.2, 2)
 motion_mode = 1
 floor_stop_on_slope = false
+
+[node name="CPU" parent="." instance=ExtResource("3_ujn6x")]
+position = Vector2(620, 136)
+scale = Vector2(0.2, 2)
+motion_mode = 1
+floor_stop_on_slope = false
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="PlayerScore" type="Label" parent="HUD"]
+texture_filter = 1
+offset_left = 128.0
+offset_top = 32.0
+offset_right = 160.0
+offset_bottom = 64.0
+theme_override_fonts/font = ExtResource("5_go4ix")
+theme_override_font_sizes/font_size = 32
+text = "0
+"
+
+[node name="CpuScore" type="Label" parent="HUD"]
+texture_filter = 1
+offset_left = 480.0
+offset_top = 32.0
+offset_right = 518.0
+offset_bottom = 69.0
+theme_override_fonts/font = ExtResource("5_go4ix")
+theme_override_font_sizes/font_size = 32
+text = "0
+"
+
+[connection signal="CpuScored" from="borders/left" to="." method="OnCpuScored"]
+[connection signal="UserScored" from="borders/right" to="." method="OnUserScored"]

@@ -19,6 +19,15 @@ public partial class Ball : CharacterBody2D
             return;
         }
 
+        GodotObject collider = collision.GetCollider();
+        if (collider is StaticBody2D border)
+        {
+            if (border.IsInGroup("leftBorder") || border.IsInGroup("rightBorder"))
+            {
+                border.Call("Hit");
+            }
+        }
+
         Velocity = Velocity.Bounce(collision.GetNormal());
     }
 }
