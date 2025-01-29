@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cpnwibs4m1tme"]
+[gd_scene load_steps=11 format=3 uid="uid://cpnwibs4m1tme"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_nmy2k"]
-[ext_resource type="PackedScene" uid="uid://8jinppjxt084" path="res://ball.tscn" id="1_qog2e"]
 [ext_resource type="Script" path="res://PointBorder.cs" id="3_4hho7"]
 [ext_resource type="PackedScene" uid="uid://d1kegwhopmuc" path="res://Player/Player.tscn" id="3_ujn6x"]
+[ext_resource type="Script" path="res://Player/Player.cs" id="4_weabh"]
+[ext_resource type="Script" path="res://Player/CPU.cs" id="5_3655p"]
 [ext_resource type="FontFile" uid="uid://bp2crjph8u2yv" path="res://fonts/QuinqueFive.ttf" id="5_go4ix"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4rdyl"]
@@ -37,12 +38,6 @@ offset_bottom = 360.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Ball" parent="." instance=ExtResource("1_qog2e")]
-position = Vector2(320, 180)
-motion_mode = 0
-floor_block_on_wall = false
-floor_max_angle = 0.0
-
 [node name="borders" type="Node" parent="."]
 
 [node name="left" type="StaticBody2D" parent="borders" groups=["leftBorder"]]
@@ -75,12 +70,14 @@ position = Vector2(20, 136)
 scale = Vector2(0.2, 2)
 motion_mode = 1
 floor_stop_on_slope = false
+script = ExtResource("4_weabh")
 
 [node name="CPU" parent="." instance=ExtResource("3_ujn6x")]
 position = Vector2(620, 136)
 scale = Vector2(0.2, 2)
 motion_mode = 1
 floor_stop_on_slope = false
+script = ExtResource("5_3655p")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
